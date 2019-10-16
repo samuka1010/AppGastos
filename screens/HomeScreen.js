@@ -26,7 +26,7 @@ export default function HomeScreen() {
         <View style={styles.Card}>
             <Card elevation={5}>
                 <Card.Title 
-                    title="StarBucks" 
+                    title="StarBuckssss" 
                     subtitle="12 de Julho - 10:32" 
                     right={(props) => <Text>10.00</Text>}
                     left={(props) => <Avatar.Icon {...props} icon="mood" />}
