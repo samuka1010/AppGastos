@@ -7,157 +7,106 @@ import {
   Text,
   View,
 } from 'react-native';
-import {DataTable} from 'react-native-paper';
-import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button, Card, Divider, Badge } from 'react-native-elements';
+import { FAB } from 'react-native-paper';
 export default function HomeScreen() {
 
   return (
     <View style={{...styles.container, flexDirection: 'column'}}>
         <View style={{...styles.header,flex: 0.1, maxHeight:50, minHeight: 50, flexDirection: 'row'}}>
-              <View style={{paddingRight: 8}}>
-                <Button
-                  type="clear"
-                  icon={
-                    <Icon
-                      name="arrow-left"
-                      size={15}
-                      color="white"
-                    />
-                  }
-                />
-              </View>
-
             <View>
-                <Text style={styles.fonteHeader}>18/10/2019</Text>
-            </View>
-
-            <View style={{paddingLeft: 8}}>
-                <Button
-                  type="clear"
-                  style={{color: '#033F63'}}
-                  icon={
-                    <Icon
-                      name="arrow-right"
-                      size={15}
-                      color="white"
-                    />
-                  }
-                />
+                <Text style={styles.fonteHeader}>Meus Gastos</Text>
             </View>
         </View>      
 
         <ScrollView>
-        <View style={{flex: 0.8, padding: 8, paddingBottom: 60 }}>
-            
-            <View style={{flex: 0.5, backgroundColor: 'rgba(0,0,0,0.15)'}}>
-                <View style={{...styles.headerSec, maxHeight:50, minHeight:50, backgroundColor: '#6D97A6'}}> 
-                   <View style={{flexDirection: 'row'}}> 
-                        <View>    
-                            <Text style={styles.fonteSec}>Créditos</Text>
+            <Card>    
+                  <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', top: 0, paddingBottom: 15}}>           
+                      <View style={{flex: 0.3, flexDirection: 'column',justifyContent: 'center'}}>  
+                          <Text style={{fontSize: 30, fontWeight: 'bold', textAlign: 'left'}}>20</Text>
+                      </View>
+                      <View style={{flex: 1, flexDirection: 'column', textAlign: 'left', justifyContent: 'center'}}>  
+                          <Text style={{fontSize: 17, fontWeight: 'bold', textAlign: 'left'}}>domingo</Text>
+                          <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)', textAlign: 'left', alignItems: 'center'}}>outubro 2019</Text>
+                      </View>                  
+
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                          <Text style={{fontSize: 23, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', color: '#94B568'}}>R$ 1450.00</Text>
+                      </View>
+                  </View>
+
+                  <Divider/>
+
+                  <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                        <View style={{flex: 0.6, flexDirection: 'row', alignItems: 'center'}}>
+                            <Badge/>
+                            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Salário</Text>
                         </View>
+                        <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 18:37</Text>
+                      </View>
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                        <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#94B568'}}>R$ 1500.00</Text>
+                      </View>
+                  </View>
 
-                        <View style={{right: 5}}>
-                            <Button
-                              type="clear"
-                              icon={
-                                <Icon
-                                  name="plus"
-                                  size={20}
-                                  color="white"
-                                />
-                              }
-                            />    
-                        </View>  
-                    </View>     
-                </View>
-                
-                <DataTable.Header style={{flexDirection: 'row', height: 30}}>
-                    <DataTable.Title style={{...styles.headerTable, flex: 0.6}}>Descrição</DataTable.Title>
-                    <DataTable.Title style={{...styles.headerTable, flex: 0.3}} numeric>Valor</DataTable.Title>
-                    <DataTable.Title style={{...styles.headerTable, flex: 0.1}}>OK</DataTable.Title>
-                </DataTable.Header>
+                  <Divider/>
 
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Salário adiantamento</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>1500.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>OK</DataTable.Cell>
-                    </DataTable.Row>
+                  <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                        <View style={{flex: 0.6, flexDirection: 'row', alignItems: 'center'}}>
+                            <Badge status="warning"/>
+                            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Bazinho</Text>
+                        </View>
+                        <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 19:00</Text>
+                      </View>
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                        <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#DA5B59'}}>R$ 50.00</Text>
+                      </View>
+                  </View>   
+                  
+                  <Divider/>                                
+            </Card>
 
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Tester work</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>150.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
+            <Card>    
+                  <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', top: 0, paddingBottom: 15}}>           
+                      <View style={{flex: 0.3, flexDirection: 'column',justifyContent: 'center'}}>  
+                          <Text style={{fontSize: 30, fontWeight: 'bold', textAlign: 'left'}}>21</Text>
+                      </View>
+                      <View style={{flex: 1, flexDirection: 'column', textAlign: 'left', justifyContent: 'center'}}>  
+                          <Text style={{fontSize: 17, fontWeight: 'bold', textAlign: 'left'}}>segunda</Text>
+                          <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)', textAlign: 'left', alignItems: 'center'}}>outubro 2019</Text>
+                      </View>                  
 
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Tester work</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>150.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Tester work</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>150.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                          <Text style={{fontSize: 23, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', color: '#94B568'}}>R$ 1350.00</Text>
+                      </View>
+                  </View>
+                      
+                  <Divider/>
 
-                <View style={{...styles.footerSec, maxHeight:50, minHeight:50, backgroundColor: '#6D97A6'}}>
-                    <Text style={styles.fonteSec}>Total: 1.950,00</Text>
-                </View>
-            </View>
-
-
-            <View style={{flex: 0.5, paddingTop: 10, backgroundColor: 'rgba(0,0,0,0.15)'}}>
-                <View style={{...styles.headerSec, maxHeight:50, minHeight:50, backgroundColor: '#6D97A6'}}>
-                    <Text style={styles.fonteSec}>Débitos</Text>
-                </View>
-                
-                <DataTable.Header style={{flexDirection: 'row', height: 30}}>
-                    <DataTable.Title style={{...styles.headerTable, flex: 0.6}}>Descrição</DataTable.Title>
-                    <DataTable.Title style={{...styles.headerTable, flex: 0.3}} numeric>Valor</DataTable.Title>
-                    <DataTable.Title style={{...styles.headerTable, flex: 0.1}}>OK</DataTable.Title>
-                </DataTable.Header>
-
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}><Text>Barzinho</Text></DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>100.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>OK</DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Presente</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>50.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
-
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Sorvete</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>50.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Almoço</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>100.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
-                    <DataTable.Row>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.6}}>Almoço</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.3}} numeric>100.00</DataTable.Cell>
-                        <DataTable.Cell style={{...styles.headerTable, flex: 0.1}}>Não</DataTable.Cell>
-                    </DataTable.Row>
-
-                
-                <View style={{...styles.footerSec, maxHeight:50, minHeight:50, backgroundColor: '#6D97A6'}}>
-                    <Text style={styles.fonteSec}>Total: 300,00</Text>
-                </View>
-            </View>
+                  <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                        <Text style={{fontSize: 17, fontWeight: 'bold'}}>Presentes</Text>
+                        <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 12:30</Text>
+                      </View>
+                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                        <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#DA5B59'}}>R$ 100.00</Text>
+                      </View>
+                  </View>                                   
+            </Card>
             
-        </View>
         </ScrollView>
 
-        
+        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+            <FAB
+              style={styles.fab}
+              icon="add"
+              onPress={() => console.log('Pressed')}
+            />
+        </View>
         <View style={{...styles.header, height:50, position:'absolute', bottom:0, width: '100%'}}>
-            <Text style={styles.fonteHeader}>Saldo: 1.650,00</Text>     
+            <Text style={styles.fonteHeader}>Saldo atual: 1350.00</Text>     
         </View>
 
     </View>
@@ -182,37 +131,19 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    right: 16,
-    bottom: 85,
-    backgroundColor: '#1C7C54' 
+    alignItems:'center',
+    bottom: 75,
+    right: '42%',
+    backgroundColor: '#0E8187' 
   },
   header: {
-    backgroundColor: '#033F63',
+    backgroundColor: '#0E8187',
     flex: 1, 
     flexDirection: 'column',
     alignItems:'center',
     justifyContent: 'center',
   },
-  headerSec: {
-    backgroundColor: '#033F63',
-    flex: 1, 
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  footerSec: {
-    backgroundColor: '#033F63',
-    flex: 1, 
-    flexDirection: 'column',
-    alignItems:'center',
-    justifyContent: 'center',
-  },
-  headerTable: {
-    flex: 1, 
-    flexDirection: 'column',
-    alignItems:'center',
-    justifyContent: 'center',
-    fontFamily: 'monospace',
-  },
+  
   fonteHeader: {
     textAlign:'center',
     fontSize: 25,
@@ -220,16 +151,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff'
   },
-  fonteSec: {
-    textAlign:'left',
-    fontSize: 25,
-    fontFamily: 'monospace',
-    fontWeight: 'bold',
-    paddingLeft: 8,
-  },
-  fonteDesc: {
-    textAlign:'left',
-    fontSize: 16,
-    fontFamily: 'monospace',
-  },
+ 
 });
