@@ -9,10 +9,77 @@ import {
 } from 'react-native';
 import { Button, Card, Divider, Badge } from 'react-native-elements';
 import { FAB } from 'react-native-paper';
+import { NavigationEvents } from 'react-navigation';
+
+import { SQLite } from 'expo-sqlite';
+//import AppStorage from '../storage/AppStorage';
+
+
+
 export default function HomeScreen() {
+
+  const databases = {};
+
+  function openDatabase(databaseName = 'db') {
+
+    let database = databases[databaseName];
+
+    if (!database) {
+        database = SQLite.openDatabase(`${databaseName}.db`);
+        databases[databaseName] = database;
+    }
+    return database;
+}
+
+async function executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
+
+  if (!sqlStatement) {
+      throw new Error('É obrigatório informar uma expressão SQL.');
+  }
+
+  const database = openDatabase(databaseName);
+
+  return new Promise((resolve, reject) => {
+      database.transaction(transaction =>
+          transaction.executeSql(
+              sqlStatement,
+              args,
+              (transaction, resultSet) => resolve(resultSet),
+              (transaction, error) => reject(error)
+          )
+      );
+  });
+}
+
+  async function transactionAsync(callback, databaseName = 'db') {
+    const database = openDatabase(databaseName);
+    return new Promise((resolve, reject) => {
+        database.transaction(transaction =>
+            callback(transaction),
+            error => reject(error),
+            () => resolve()
+        )
+    });
+}
+
+  async function _willFocus() {
+    await transactionAsync(transaction => {
+      transaction.executeSql('drop table if exists hcli');
+      transaction.executeSql('create table if not exists hcli (cod integer primary key, raz varchar(40), fan varchar(40))');
+    });
+    await transactionAsync(transaction => {
+    transaction.executeSql(
+      'insert into hcli (cod, raz, fan) values (?, ?, ?)',
+      [1, 'razzzzz', 'fannn' ]
+      );
+    });
+    result = await executeSqlAsync('select * from hcli');
+    console.log(result.rows._array)
+  }
 
   return (
     <View style={{...styles.container, flexDirection: 'column'}}>
+        <NavigationEvents onWillFocus={async => _willFocus()}/>
         <View style={{...styles.header,flex: 0.1, maxHeight:50, minHeight: 50, flexDirection: 'row'}}>
             <View>
                 <Text style={styles.fonteHeader}>Meus Gastos</Text>
@@ -97,6 +164,7 @@ export default function HomeScreen() {
             </Card>
             
         </ScrollView>
+
 
         <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
             <FAB
