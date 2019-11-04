@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   Platform,
@@ -16,28 +16,36 @@ import { SQLite } from 'expo-sqlite';
 
 
 
-export default function HomeScreen() {
+export default class HomeScreen extends React.Component {
 
-  const databases = {};
+  databases = {};
 
-  function openDatabase(databaseName = 'db') {
+  movList = [];
 
-    let database = databases[databaseName];
+  state = {
+    movs : [],
+  }
+
+  //const [movs, setMovs] = useState(0);
+
+  openDatabase(databaseName = 'db') {
+
+    let database = this.databases[databaseName];
 
     if (!database) {
         database = SQLite.openDatabase(`${databaseName}.db`);
-        databases[databaseName] = database;
+        this.databases[databaseName] = database;
     }
     return database;
 }
 
-async function executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
+async executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
 
   if (!sqlStatement) {
       throw new Error('É obrigatório informar uma expressão SQL.');
   }
 
-  const database = openDatabase(databaseName);
+  const database = this.openDatabase(databaseName);
 
   return new Promise((resolve, reject) => {
       database.transaction(transaction =>
@@ -51,8 +59,8 @@ async function executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
   });
 }
 
-  async function transactionAsync(callback, databaseName = 'db') {
-    const database = openDatabase(databaseName);
+async transactionAsync(callback, databaseName = 'db') {
+    const database = this.openDatabase(databaseName);
     return new Promise((resolve, reject) => {
         database.transaction(transaction =>
             callback(transaction),
@@ -62,24 +70,32 @@ async function executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
     });
 }
 
-  async function _willFocus() {
-    await transactionAsync(transaction => {
-      transaction.executeSql('drop table if exists hcli');
-      transaction.executeSql('create table if not exists hcli (cod integer primary key, raz varchar(40), fan varchar(40))');
+_willFocus = async () => {
+    await this.transactionAsync(transaction => {
+      transaction.executeSql('drop table if exists tmov');
+      transaction.executeSql('create table if not exists tmov (id varchar(20) primary key, dat varchar(10),'+ 
+      ' hor varchar(5), tip integer, val decimal(9,2), des varchar(25), ope varchar(1) )');
     });
-    await transactionAsync(transaction => {
-    transaction.executeSql(
-      'insert into hcli (cod, raz, fan) values (?, ?, ?)',
-      [1, 'razzzzz', 'fannn' ]
+    await this.transactionAsync(transaction => {
+      transaction.executeSql(
+        'insert into tmov (id, dat, hor, tip, val, des, ope) values (?, ?, ?, ?, ?, ?, ?)',
+        ['14/11/2019 14:14', '14/11/2019' , '14:14', 1, 45.55, 'Teste gasto', 'D' ]
+      );
+      transaction.executeSql(
+        'insert into tmov (id, dat, hor, tip, val, des, ope) values (?, ?, ?, ?, ?, ?, ?)',
+        ['14/11/2019 14:15', '14/11/2019' , '14:14', 2, 45.55, 'Teste gasto', 'D' ]
       );
     });
-    result = await executeSqlAsync('select * from hcli');
-    console.log(result.rows._array)
-  }
+    result = await this.executeSqlAsync('select * from tmov');
+    this.setState({movs: result.rows._array});
+    console.log(this.state.movs)
+}
+
+render() {
 
   return (
     <View style={{...styles.container, flexDirection: 'column'}}>
-        <NavigationEvents onWillFocus={async => _willFocus()}/>
+        <NavigationEvents onWillFocus={this._willFocus}/>
         <View style={{...styles.header,flex: 0.1, maxHeight:50, minHeight: 50, flexDirection: 'row'}}>
             <View>
                 <Text style={styles.fonteHeader}>Meus Gastos</Text>
@@ -87,81 +103,55 @@ async function executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
         </View>      
 
         <ScrollView>
-            <Card>    
-                  <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', top: 0, paddingBottom: 15}}>           
-                      <View style={{flex: 0.3, flexDirection: 'column',justifyContent: 'center'}}>  
-                          <Text style={{fontSize: 30, fontWeight: 'bold', textAlign: 'left'}}>20</Text>
-                      </View>
-                      <View style={{flex: 1, flexDirection: 'column', textAlign: 'left', justifyContent: 'center'}}>  
-                          <Text style={{fontSize: 17, fontWeight: 'bold', textAlign: 'left'}}>domingo</Text>
-                          <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)', textAlign: 'left', alignItems: 'center'}}>outubro 2019</Text>
-                      </View>                  
+          {this.state.movs.map((item,index)=>(
+                <Card key={index}>    
+                      <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', top: 0, paddingBottom: 15}}>           
+                          <View style={{flex: 0.3, flexDirection: 'column',justifyContent: 'center'}}>  
+                              <Text style={{fontSize: 30, fontWeight: 'bold', textAlign: 'left'}}>20</Text>
+                          </View>
+                          <View style={{flex: 1, flexDirection: 'column', textAlign: 'left', justifyContent: 'center'}}>  
+                              <Text style={{fontSize: 17, fontWeight: 'bold', textAlign: 'left'}}>domingo</Text>
+                              <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)', textAlign: 'left', alignItems: 'center'}}>outubro 2019</Text>
+                          </View>                  
 
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                          <Text style={{fontSize: 23, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', color: '#94B568'}}>R$ 1450.00</Text>
+                          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                              <Text style={{fontSize: 23, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', color: '#94B568'}}>{item.val}</Text>
+                          </View>
                       </View>
-                  </View>
 
-                  <Divider/>
+                      <Divider/>
 
-                  <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                        <View style={{flex: 0.6, flexDirection: 'row', alignItems: 'center'}}>
-                            <Badge/>
-                            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Salário</Text>
-                        </View>
-                        <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 18:37</Text>
+                      <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
+                          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                            <View style={{flex: 0.6, flexDirection: 'row', alignItems: 'center'}}>
+                                <Badge/>
+                                <Text style={{fontSize: 17, fontWeight: 'bold'}}> Salário</Text>
+                            </View>
+                            <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 18:37</Text>
+                          </View>
+                          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                            <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#94B568'}}>R$ 1500.00</Text>
+                          </View>
                       </View>
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                        <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#94B568'}}>R$ 1500.00</Text>
-                      </View>
-                  </View>
 
-                  <Divider/>
+                      <Divider/>
 
-                  <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                        <View style={{flex: 0.6, flexDirection: 'row', alignItems: 'center'}}>
-                            <Badge status="warning"/>
-                            <Text style={{fontSize: 17, fontWeight: 'bold'}}> Bazinho</Text>
-                        </View>
-                        <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 19:00</Text>
-                      </View>
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                        <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#DA5B59'}}>R$ 50.00</Text>
-                      </View>
-                  </View>   
-                  
-                  <Divider/>                                
-            </Card>
-
-            <Card>    
-                  <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', top: 0, paddingBottom: 15}}>           
-                      <View style={{flex: 0.3, flexDirection: 'column',justifyContent: 'center'}}>  
-                          <Text style={{fontSize: 30, fontWeight: 'bold', textAlign: 'left'}}>21</Text>
-                      </View>
-                      <View style={{flex: 1, flexDirection: 'column', textAlign: 'left', justifyContent: 'center'}}>  
-                          <Text style={{fontSize: 17, fontWeight: 'bold', textAlign: 'left'}}>segunda</Text>
-                          <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)', textAlign: 'left', alignItems: 'center'}}>outubro 2019</Text>
-                      </View>                  
-
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                          <Text style={{fontSize: 23, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', color: '#94B568'}}>R$ 1350.00</Text>
-                      </View>
-                  </View>
+                      <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
+                          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                            <View style={{flex: 0.6, flexDirection: 'row', alignItems: 'center'}}>
+                                <Badge status="warning"/>
+                                <Text style={{fontSize: 17, fontWeight: 'bold'}}> Bazinho</Text>
+                            </View>
+                            <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 19:00</Text>
+                          </View>
+                          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
+                            <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#DA5B59'}}>R$ 50.00</Text>
+                          </View>
+                      </View>   
                       
-                  <Divider/>
-
-                  <View style={{flex: 1, flexDirection: 'row', height: 50}}>     
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                        <Text style={{fontSize: 17, fontWeight: 'bold'}}>Presentes</Text>
-                        <Text style={{fontSize: 13, color: 'rgba(0,0,0,0.6)'}}>Conta NEXT 12:30</Text>
-                      </View>
-                      <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>  
-                        <Text style={{fontSize: 19, fontWeight: 'bold', textAlign: 'right', alignItems: 'center', justifyContent: 'center', color: '#DA5B59'}}>R$ 100.00</Text>
-                      </View>
-                  </View>                                   
-            </Card>
+                      <Divider/>                                
+                </Card>
+            ))}           
             
         </ScrollView>
 
@@ -180,13 +170,14 @@ async function executeSqlAsync(sqlStatement, args = [], databaseName = 'db') {
     </View>
   );
 }
+}
 
 HomeScreen.navigationOptions = {
   header: null,
 };
 
 
-const styles = StyleSheet.create({
+styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 24,
