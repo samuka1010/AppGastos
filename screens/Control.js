@@ -10,7 +10,7 @@ import {
 import { Button, Card, Divider, Badge } from 'react-native-elements';
 import { FAB } from 'react-native-paper';
 import { NavigationEvents } from 'react-navigation';
-
+import NavigationService from '../navigation/NavigationService';
 import { SQLite } from 'expo-sqlite';
 //import AppStorage from '../storage/AppStorage';
 
@@ -160,7 +160,7 @@ render() {
             <FAB
               style={styles.fab}
               icon="add"
-              onPress={() => console.log('Pressed')}
+              onPress={() => NavigationService.navigate('Add',{})}
             />
         </View>
         <View style={{...styles.header, height:50, position:'absolute', bottom:0, width: '100%'}}>
